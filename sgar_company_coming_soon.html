@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SGAR &amp; Company — Chartered Accountants</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Instrument Serif, Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            stone: {
+              bg: '#F7F7F5',
+              line: '#E5E5E0',
+            },
+            ink: {
+              primary: '#111111',
+              muted: '#666666',
+              subtle: '#8A8A84',
+            },
+            forest: {
+              accent: '#0F5132',
+            },
+          },
+          fontFamily: {
+            serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+            sans: ['"Inter"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #F7F7F5;
+      color: #111111;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Fine architectural structural grid */
+    .swiss-grid-bg {
+      background-size: 64px 64px;
+      background-image:
+        linear-gradient(to right, rgba(229, 229, 224, 0.72) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(229, 229, 224, 0.72) 1px, transparent 1px);
+    }
+
+    /* Soft animated sage/slate mesh aura */
+    @keyframes meshDrift {
+      0%, 100% {
+        transform: translate3d(-4%, -3%, 0) scale(1);
+      }
+      50% {
+        transform: translate3d(4%, 4%, 0) scale(1.07);
+      }
+    }
+
+    @keyframes meshDriftReverse {
+      0%, 100% {
+        transform: translate3d(3%, 4%, 0) scale(1.04);
+      }
+      50% {
+        transform: translate3d(-4%, -3%, 0) scale(0.97);
+      }
+    }
+
+    .mesh-blob-1 {
+      animation: meshDrift 18s ease-in-out infinite;
+    }
+
+    .mesh-blob-2 {
+      animation: meshDriftReverse 22s ease-in-out infinite;
+    }
+
+    /* Kinetic masked line-by-line reveal */
+    .mask-line {
+      overflow: hidden;
+      display: block;
+    }
+
+    .reveal-text {
+      display: block;
+      opacity: 0;
+      transform: translateY(105%);
+      transition:
+        transform 1.05s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
+    }
+
+    .reveal-fade {
+      opacity: 0;
+      transform: translateY(14px);
+      transition:
+        transform 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
+    }
+
+    .is-loaded .reveal-text {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .is-loaded .reveal-fade {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Glassmorphic status pill */
+    .status-pill {
+      background: rgba(247, 247, 245, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid #E5E5E0;
+      box-shadow: 0 2px 14px rgba(17, 17, 17, 0.03);
+    }
+
+    /* Subtle emerald pulse */
+    @keyframes emeraldPulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.95;
+        box-shadow: 0 0 0 0 rgba(15, 81, 50, 0.45);
+      }
+      50% {
+        transform: scale(1.12);
+        opacity: 1;
+        box-shadow: 0 0 0 6px rgba(15, 81, 50, 0);
+      }
+    }
+
+    .emerald-dot {
+      animation: emeraldPulse 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+  </style>
+</head>
+<body class="font-sans selection:bg-forest-accent/15 selection:text-ink-primary">
+
+  <!-- Ambient Soft Sage & Slate Mesh Gradient Glows -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div class="mesh-blob-1 absolute -top-[18%] left-[12%] w-[44vw] h-[44vw] max-w-[640px] max-h-[640px] rounded-full bg-[#DCE6DF]/65 blur-[110px]"></div>
+    <div class="mesh-blob-2 absolute -bottom-[20%] right-[10%] w-[46vw] h-[46vw] max-w-[680px] max-h-[680px] rounded-full bg-[#E3E7EA]/75 blur-[120px]"></div>
+  </div>
+
+  <!-- Hairline Structural Swiss Grid Layer -->
+  <div class="fixed inset-0 swiss-grid-bg pointer-events-none z-0"></div>
+
+  <!-- Interactive Generative Precision Dot-Matrix & Harmonic Wave Canvas -->
+  <canvas id="precision-canvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+  <!-- Tactile SVG Fractal Noise Grain Overlay -->
+  <svg class="fixed inset-0 w-full h-full pointer-events-none z-20 opacity-[0.035]" aria-hidden="true">
+    <filter id="paper-grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#paper-grain)" />
+  </svg>
+
+  <!-- Outer Architectural Viewport Frame (Hairline Swiss Borders) -->
+  <div class="relative z-10 w-full h-screen p-4 sm:p-7 md:p-10 flex flex-col">
+    <div class="relative w-full h-full border border-stone-line bg-white/[0.18] flex flex-col justify-between items-center px-6 sm:px-12 py-8 sm:py-10">
+
+      <!-- Corner Crosshair Registration Marks (Swiss Editorial Detail) -->
+      <span class="hidden sm:block absolute -top-[4.5px] -left-[4.5px] w-2 h-2 border-t border-l border-ink-primary/40"></span>
+      <span class="hidden sm:block absolute -top-[4.5px] -right-[4.5px] w-2 h-2 border-t border-r border-ink-primary/40"></span>
+      <span class="hidden sm:block absolute -bottom-[4.5px] -left-[4.5px] w-2 h-2 border-b border-l border-ink-primary/40"></span>
+      <span class="hidden sm:block absolute -bottom-[4.5px] -right-[4.5px] w-2 h-2 border-b border-r border-ink-primary/40"></span>
+
+      <!-- Top Live Status Pill -->
+      <div class="reveal-fade" style="transition-delay: 120ms;">
+        <div class="status-pill inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full">
+          <span class="emerald-dot w-2 h-2 rounded-full bg-forest-accent inline-block"></span>
+          <span class="font-mono text-[11px] sm:text-xs tracking-[0.14em] uppercase text-ink-primary/90 font-medium">
+            SITE ARCHITECTURE IN PROGRESS // 2026
+          </span>
+        </div>
+      </div>
+
+      <!-- Centerpiece Editorial Block -->
+      <main class="max-w-3xl mx-auto text-center my-auto flex flex-col items-center">
+        
+        <!-- Firm Identity & Eyebrow -->
+        <div class="mb-7 sm:mb-9 space-y-2">
+          <div class="mask-line">
+            <p class="reveal-text font-sans text-[11px] sm:text-xs font-medium tracking-[0.28em] uppercase text-ink-muted" style="transition-delay: 220ms;">
+              CHARTERED ACCOUNTANTS
+            </p>
+          </div>
+          <div class="mask-line">
+            <h2 class="reveal-text font-sans text-lg sm:text-xl font-medium tracking-[-0.01em] text-ink-primary" style="transition-delay: 310ms;">
+              SGAR &amp; Company
+            </h2>
+          </div>
+        </div>
+
+        <!-- Hairline Divider Rule -->
+        <div class="reveal-fade w-10 h-[1px] bg-ink-primary/20 mb-7 sm:mb-9" style="transition-delay: 380ms;"></div>
+
+        <!-- Main Editorial Headline in Instrument Serif -->
+        <h1 class="font-serif text-[2.65rem] sm:text-6xl md:text-[4.65rem] leading-[1.04] tracking-[-0.02em] text-ink-primary font-normal mb-6">
+          <span class="mask-line">
+            <span class="reveal-text" style="transition-delay: 440ms;">
+              Structuring <em class="italic font-normal text-forest-accent">clarity</em>
+            </span>
+          </span>
+          <span class="mask-line">
+            <span class="reveal-text" style="transition-delay: 540ms;">
+              for what comes next.
+            </span>
+          </span>
+        </h1>
+
+        <!-- Concise Subcopy -->
+        <div class="max-w-md sm:max-w-lg mx-auto">
+          <div class="mask-line">
+            <p class="reveal-text font-sans text-sm sm:text-base md:text-[17px] leading-relaxed text-ink-muted font-normal" style="transition-delay: 660ms;">
+              Our new digital space is currently being engineered with precision and will be live shortly.
+            </p>
+          </div>
+        </div>
+
+      </main>
+
+      <!-- Subtle Minimal Spatial Balance Anchor (No links, no clutter) -->
+      <div class="reveal-fade h-4 flex items-center justify-center" style="transition-delay: 760ms;">
+        <span class="w-1 h-1 rounded-full bg-ink-primary/25"></span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Kinetic Load Trigger & Interactive Harmonic Dot-Matrix Canvas -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Trigger Kinetic Masked Typography Reveal
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          document.body.classList.add('is-loaded');
+        }, 60);
+      });
+
+      // 2. Generative Precision Dot-Matrix & Harmonic Wave Canvas
+      const canvas = document.getElementById('precision-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      let width = 0;
+      let height = 0;
+      let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      // Smooth cursor tracking state
+      const pointer = {
+        x: -9999,
+        y: -9999,
+        targetX: -9999,
+        targetY: -9999,
+        active: false
+      };
+
+      const spacing = 32; // Precision Swiss grid spacing
+      let cols = 0;
+      let rows = 0;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      const resize = () => {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        cols = Math.ceil(width / spacing) + 1;
+        rows = Math.ceil(height / spacing) + 1;
+        offsetX = (width - (cols - 1) * spacing) / 2;
+        offsetY = (height - (rows - 1) * spacing) / 2;
+      };
+
+      window.addEventListener('resize', resize);
+      resize();
+
+      // Pointer listeners (mouse + touch)
+      window.addEventListener('mousemove', (e) => {
+        pointer.targetX = e.clientX;
+        pointer.targetY = e.clientY;
+        pointer.active = true;
+      }, { passive: true });
+
+      window.addEventListener('mouseleave', () => {
+        pointer.active = false;
+      });
+
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+          pointer.targetX = e.touches[0].clientX;
+          pointer.targetY = e.touches[0].clientY;
+          pointer.active = true;
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', () => {
+        pointer.active = false;
+      });
+
+      let time = 0;
+
+      const render = () => {
+        time += 0.014;
+        ctx.clearRect(0, 0, width, height);
+
+        // Ease pointer position for fluid organic response
+        if (pointer.active) {
+          if (pointer.x === -9999) {
+            pointer.x = pointer.targetX;
+            pointer.y = pointer.targetY;
+          } else {
+            pointer.x += (pointer.targetX - pointer.x) * 0.09;
+            pointer.y += (pointer.targetY - pointer.y) * 0.09;
+          }
+        } else if (pointer.x !== -9999) {
+          // Gently drift pointer influence away when idle
+          pointer.x += (width * 0.5 - pointer.x) * 0.015;
+          pointer.y += (height * 0.5 - pointer.y) * 0.015;
+        }
+
+        const influenceRadius = 210;
+
+        for (let i = 0; i < cols; i++) {
+          const baseX = offsetX + i * spacing;
+
+          for (let j = 0; j < rows; j++) {
+            const baseY = offsetY + j * spacing;
+
+            // Subtle ambient harmonic wave across the matrix
+            const wave =
+              Math.sin(i * 0.22 + time) * 1.4 +
+              Math.cos(j * 0.22 + time * 0.85) * 1.4;
+
+            let drawX = baseX + wave * 0.45;
+            let drawY = baseY + wave * 0.45;
+            let radius = 0.85;
+            let alpha = 0.22;
+            let isHighlighted = false;
+
+            // Cursor proximity displacement & emerald tint
+            if (pointer.x !== -9999) {
+              const dx = baseX - pointer.x;
+              const dy = baseY - pointer.y;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+
+              if (dist < influenceRadius) {
+                const factor = 1 - dist / influenceRadius;
+                const eased = factor * factor * (3 - 2 * factor); // Smoothstep
+                const angle = Math.atan2(dy, dx);
+                const push = eased * 11;
+
+                drawX += Math.cos(angle) * push;
+                drawY += Math.sin(angle) * push;
+                radius = 0.85 + eased * 1.35;
+                alpha = 0.22 + eased * 0.48;
+                isHighlighted = eased > 0.25;
+              }
+            }
+
+            ctx.beginPath();
+            ctx.arc(drawX, drawY, radius, 0, Math.PI * 2);
+            if (isHighlighted) {
+              ctx.fillStyle = `rgba(15, 81, 50, ${alpha})`; // Sharp forest emerald
+            } else {
+              ctx.fillStyle = `rgba(17, 17, 17, ${alpha})`; // Charcoal ink
+            }
+            ctx.fill();
+          }
+        }
+
+        requestAnimationFrame(render);
+      };
+
+      render();
+    });
+  </script>
+</body>
+</html>
